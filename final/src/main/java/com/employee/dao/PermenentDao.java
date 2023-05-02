@@ -17,10 +17,20 @@ public class PermenentDao {
 		List<PermenentEmployee> list = new ArrayList<>();
 		try{
 			PreparedStatement preparedStatement = c.prepareStatement(Constants.GET_PERMENENT_QUERY);
-			ResultSet rs = preparedStatement.executeQuery();
-			while(rs.next()) {
-				PermenentEmployee pe = new PermenentEmployee(rs.getInt("id"),rs.getString("periodtime"));
-				list.add(pe);
+			try {
+				ResultSet rs = preparedStatement.executeQuery();
+				try {
+					while(rs.next()) {
+						PermenentEmployee pe = new PermenentEmployee(rs.getInt("id"),rs.getString("periodtime"));
+						list.add(pe);
+					}
+				}
+				finally {
+					rs.close();
+				}
+			}
+			finally {
+				preparedStatement.close();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

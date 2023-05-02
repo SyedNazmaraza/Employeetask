@@ -14,10 +14,20 @@ public class PartTimeDao {
 		List<PartTimeEmployee> list = new ArrayList<>();
 		try {
 			PreparedStatement preparedStatement = c.prepareStatement(Constants.GET_PARTTIME_QUERY);
-			ResultSet rs = preparedStatement.executeQuery();
-			while(rs.next()) {
-				PartTimeEmployee pe = new PartTimeEmployee(rs.getInt("id"),rs.getString("periodtime"));
-				list.add(pe);
+			try {
+				ResultSet rs = preparedStatement.executeQuery();
+				try {
+					while(rs.next()) {
+					PartTimeEmployee pe = new PartTimeEmployee(rs.getInt("id"),rs.getString("periodtime"));
+					list.add(pe);
+					}
+				}
+				finally {
+					rs.close();
+				}
+			}
+			finally {
+				preparedStatement.close();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -30,7 +40,14 @@ public class PartTimeDao {
 		preparedstatement.setInt(1, e.getId());
 		preparedstatement.setString(2, e.getPeriodtime());
 		preparedstatement.execute();
-		return e;
+		try {
+			return e;
+		}
+		finally {
+			preparedstatement.close();
+		}
+		
+	
 	}
 }
 

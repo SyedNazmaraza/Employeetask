@@ -17,10 +17,20 @@ public class ContractDao {
 		List<ContractEmployee> list = new ArrayList<>();
 		try{
 			PreparedStatement preparedStatement = c.prepareStatement(Constants.GET_CONTRACT_QUERY);
-			ResultSet rs = preparedStatement.executeQuery();
-			while(rs.next()) {
-				ContractEmployee ce = new ContractEmployee(rs.getInt("id"),rs.getString("periodtime"));
-				list.add(ce);
+			try {
+				ResultSet rs = preparedStatement.executeQuery();
+				try {
+					while(rs.next()) {
+					ContractEmployee ce = new ContractEmployee(rs.getInt("id"),rs.getString("periodtime"));
+					list.add(ce);
+					}
+				}
+				finally {
+					rs.close();
+				}
+			}
+			finally {
+				preparedStatement.close();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -33,7 +43,12 @@ public class ContractDao {
 		preparedstatement.setInt(1, e.getId());
 		preparedstatement.setString(2, e.getPeriodtime());
 		preparedstatement.execute();
+		try {
 		return e;
+		}
+		finally {
+			preparedstatement.close();
+		}
 	}
 }
 

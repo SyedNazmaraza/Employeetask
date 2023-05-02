@@ -2,6 +2,7 @@ package com.employee.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -28,14 +29,23 @@ public class PermenentController extends HttpServlet {
 		ServletContext cxt = request.getServletContext();
 		Dbclass db = (Dbclass) cxt.getAttribute("dbmanager");
 		Connection c = db.getConnection();
-		
-		List<PermenentEmployee> list = dao.getdetails(c);
-		String s = gson.toJson(list);
 		PrintWriter out = response.getWriter();
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		out.print(s);
-		out.flush();		
+		try {
+			List<PermenentEmployee> list = dao.getdetails(c);
+			String s = gson.toJson(list);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			out.print(s);
+			out.flush();
+		}
+		finally {
+			out.close();
+			try {
+				c.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	}

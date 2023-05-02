@@ -56,7 +56,7 @@ public class AllEmployeeController extends HttpServlet {
 				out.print(employeeJsonString);
 				out.flush();
 			}
-			else if(jsontoObject!=null && jsontoObject.getName()!=null ) {
+			else {
 				List<AllEmployee> l1 = new ArrayList<>();
 				l1 = employeedao.getEmployeeByName(jsontoObject.getName().toString(),jsontoObject.getFilter(),c);
 				String employeeJsonString = gson.toJson(l1); 
@@ -66,11 +66,6 @@ public class AllEmployeeController extends HttpServlet {
 				out.print(employeeJsonString);
 				out.flush();
 			}
-//			else if(jsontoObject!=null && jsontoObject!=null && !jsontoObject.getFilter().isEmpty()) {
-//				List<AllEmployee> l1 = new ArrayList<>();
-//				l1 = employeedao.
-//				
-//			}
 			
 			
 		} catch (JsonSyntaxException | JsonIOException | IOException e1) {
